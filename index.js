@@ -35,29 +35,33 @@ const generateBeige = () => {
   return [svg,hex]
 }
 
+const init = async() => {
+  let curBeige = generateBeige();
+  fs.writeFile('pfp.svg', curBeige[0], err => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    //file written successfully
+  });
+
+  (async() => {
+    const inputFilePath = 'pfp.svg';
+    await convertFile(inputFilePath);
+  
+    await scrapeTest(curBeige[1]);
+  })();
+};
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 })
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log("\x1b[32m%s\x1b[0m",`Server is running on port: ${port}`);
-
+  await init();
   schedule.scheduleJob('0 0 * * *', async () => { 
-    let curBeige = generateBeige();
-    fs.writeFile('pfp.svg', curBeige[0], err => {
-      if (err) {
-        console.error(err)
-        return
-      }
-      //file written successfully
-    });
-
-    (async() => {
-      const inputFilePath = 'pfp.svg';
-      await convertFile(inputFilePath);
-    
-      await scrapeTest(curBeige[1]);
-    })();
+    await init();
   });
 })
 
