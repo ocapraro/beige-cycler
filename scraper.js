@@ -29,7 +29,7 @@ const changePFP = async(page) => {
   await page.waitForTimeout(300);
   await page.waitForSelector('.file-input',{timeout:6000});
   const inputUploadHandle = await page.$('.file-input');
-  let fileToUpload = './tmp/pfp.png';
+  let fileToUpload = 'tmp/pfp.png';
   inputUploadHandle.uploadFile(fileToUpload);
   console.log("Resizing");
   await page.waitForSelector('.fullscreenOnMobile-ixj0e3 .lookFilled-yCfaCM',{timeout:6000});
@@ -99,7 +99,7 @@ export async function scrapeTest(aboutMe) {
   
   await changePFP(page);  
 
-  await page.screenshot({path:'./tmp/test2.png'});
+  await page.screenshot({path:'tmp/test2.png'});
 
   await browser.close();
   

@@ -37,7 +37,7 @@ const generateBeige = () => {
 
 const init = async() => {
   let curBeige = generateBeige();
-  fs.writeFile('./tmp/pfp.svg', curBeige[0], err => {
+  fs.writeFile('tmp/pfp.svg', curBeige[0], err => {
     if (err) {
       console.error(err)
       return
@@ -46,7 +46,7 @@ const init = async() => {
   });
 
   (async() => {
-    const inputFilePath = './tmp/pfp.svg';
+    const inputFilePath = 'tmp/pfp.svg';
     await convertFile(inputFilePath);
   
     await scrapeTest(curBeige[1]);
