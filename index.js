@@ -53,7 +53,7 @@ const init = async() => {
   })();
 };
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   await init();
   res.send('Hello World!');
 })
