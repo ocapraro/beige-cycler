@@ -1,0 +1,13 @@
+# dependencies
+/node_modules
+
+# environment
+.env
+
+# db
+colors.db
+
+# pics
+pfp.png
+pfp.svg
+test2.png
