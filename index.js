@@ -54,12 +54,12 @@ const init = async() => {
 };
 
 app.get('/', (req, res) => {
+  await init();
   res.send('Hello World!');
 })
 
 app.listen(port, async () => {
   console.log("\x1b[32m%s\x1b[0m",`Server is running on port: ${port}`);
-  await init();
   schedule.scheduleJob('0 0 * * *', async () => { 
     await init();
   });
