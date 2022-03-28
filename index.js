@@ -14,14 +14,14 @@ const app = express();
 const port = process.env.PORT || 80;
 
 const randRange = (min,max) => {
-  const variance = 3;
+  const variance = 1;
   return (Math.floor((Math.random() * (max - min + 1))/variance)*variance) + min;
 }
 
 const generateBeige = () => {
-  const hueRange = [37,43];
+  const hueRange = [33,43];
   const saturationRange = [70,80];
-  const luminosityRange = [75,88];
+  const luminosityRange = [70,88];
   const hue = randRange(hueRange[0],hueRange[1]);
   const saturation = randRange(saturationRange[0],saturationRange[1]);
   const luminosity = randRange(luminosityRange[0],luminosityRange[1]);
