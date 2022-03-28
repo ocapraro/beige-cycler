@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 80;
 
 const randRange = (min,max) => {
-  const variance = 5;
+  const variance = 3;
   return (Math.floor((Math.random() * (max - min + 1))/variance)*variance) + min;
 }
 
@@ -60,7 +60,7 @@ app.get('/', async (req, res) => {
 
 app.listen(port, async () => {
   console.log("\x1b[32m%s\x1b[0m",`Server is running on port: ${port}`);
-  schedule.scheduleJob('0 0 * * *', async () => { 
+  schedule.scheduleJob('0 * * * *', async () => { 
     await init();
   });
 })

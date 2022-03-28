@@ -83,23 +83,27 @@ export async function scrapeTest(aboutMe) {
 
   console.log("Solving captchas...");
   console.time('Time elapsed');
-  await frame.waitForSelector('#checkbox',{timeout:10000});
+  await frame.waitForSelector('#checkbox',{timeout:60000});
   await page.solveRecaptchas();
   console.timeEnd('Time elapsed');
+  await page.waitForTimeout(1000);
+  await page.screenshot({path:'tmp/test.png'});
+  await page.waitForTimeout(5000);
+  await page.screenshot({path:'tmp/test2.png'});
   console.log("Navigating to settings");
-  await page.waitForSelector('[aria-label="User Settings"]',{timeout:6000});
+  await page.waitForSelector('[aria-label="User Settings"]',{timeout:60000});
   await page.evaluate(() => {
     document.querySelector('[aria-label="User Settings"]').click();
   });
   console.log("Accessing profile");
-  await page.waitForSelector('.userInfo-regn9W .button-f2h6uQ',{timeout:6000});
+  await page.waitForSelector('.userInfo-regn9W .button-f2h6uQ',{timeout:60000});
   await page.evaluate(() => {
     document.querySelector('.userInfo-regn9W .button-f2h6uQ').click();
   });
   
   await changePFP(page);  
 
-  await page.screenshot({path:'tmp/test2.png'});
+  // await page.screenshot({path:'tmp/test2.png'});
 
   await browser.close();
   
