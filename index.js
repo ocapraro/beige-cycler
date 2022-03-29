@@ -6,6 +6,13 @@ import express from "express";
 import schedule from "node-schedule";
 import dotenv from "dotenv";
 
+/*
+  TODO:
+  - restart on error
+  - leave chromium open
+  - better hues?
+*/
+
 // Load environment vars
 dotenv.config();
 
@@ -16,6 +23,15 @@ const port = process.env.PORT || 80;
 const randRange = (min,max) => {
   const variance = 1;
   return (Math.floor((Math.random() * (max - min + 1))/variance)*variance) + min;
+}
+
+const retry = async (maxRetries, fn) => {
+  return await fn().catch(function(err) { 
+    if (maxRetries <= 0) {
+      throw err;
+    }
+    return await retry(maxRetries - 1, fn); 
+  });
 }
 
 const generateBeige = () => {
@@ -53,15 +69,19 @@ const init = async() => {
   })();
 };
 
-app.get('/', async (req, res) => {
+app.get('/cycle', async (req, res) => {
   await init();
-  res.send('Hello World!');
+  res.send('Cycling');
+})
+
+app.get('/', async (req, res) => {
+  res.send('Running');
 })
 
 app.listen(port, async () => {
   console.log("\x1b[32m%s\x1b[0m",`Server is running on port: ${port}`);
   schedule.scheduleJob('0 * * * *', async () => { 
-    await init();
+    await retry(10, init);
   });
 })
 
