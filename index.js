@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 
 /*
   TODO:
-  - restart on error
+  - ~~restart on error~~
   - leave chromium open
   - better hues?
 */
@@ -26,10 +26,11 @@ const randRange = (min,max) => {
 }
 
 const retry = async (maxRetries, fn) => {
-  return await fn().catch(function(err) { 
+  return await fn().catch(async function(err) { 
     if (maxRetries <= 0) {
-      throw err;
+      next(err);
     }
+    console.log(`Retrying: ${maxRetries} attempts left`);
     return await retry(maxRetries - 1, fn); 
   });
 }
@@ -43,11 +44,9 @@ const generateBeige = () => {
   const luminosity = randRange(luminosityRange[0],luminosityRange[1]);
   let beige = `hsl(${hue},${saturation}%,${luminosity}%)`;
   const hex = hsl(hue,saturation,luminosity).toUpperCase();
-  let svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="200" height="200" viewBox="0 0 200 200">
-      <rect width="100%" height="100%" fill="${beige}" rx="4.5" x="0" y="0" />
-    </svg>
-  `;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="200" height="200" viewBox="0 0 200 200">
+              <rect width="100%" height="100%" fill="${beige}" rx="4.5" x="0" y="0" />
+             </svg>`;
   return [svg,hex]
 }
 
@@ -65,12 +64,12 @@ const init = async() => {
     const inputFilePath = 'tmp/pfp.svg';
     await convertFile(inputFilePath);
   
-    await scrapeTest(curBeige[1]);
+    await retry(10, scrapeTest);
   })();
 };
 
 app.get('/cycle', async (req, res) => {
-  await init();
+  await retry(10, init);
   res.send('Cycling');
 })
 
