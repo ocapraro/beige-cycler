@@ -19,6 +19,7 @@ dotenv.config();
 const {convertFile} = pkg;
 const app = express();
 const port = process.env.PORT || 80;
+let cycling = false;
 
 const randRange = (min,max) => {
   const variance = 1;
@@ -51,6 +52,7 @@ const generateBeige = () => {
 }
 
 const init = async() => {
+  cycling = true;
   let curBeige = generateBeige();
   fs.writeFile('tmp/pfp.svg', curBeige[0], err => {
     if (err) {
@@ -60,17 +62,22 @@ const init = async() => {
     //file written successfully
   });
 
-  (async() => {
+  await (async() => {
     const inputFilePath = 'tmp/pfp.svg';
     await convertFile(inputFilePath);
   
     await retry(10, scrapeTest);
   })();
+  cycling = false;
 };
 
 app.get('/cycle', async (req, res) => {
-  await retry(10, init);
-  res.send('Cycling');
+  if (cycling) {
+    res.send('Already Cycling');
+  }else{
+    res.send('Cycling');
+    await retry(10, init);
+  }
 })
 
 app.get('/', async (req, res) => {
@@ -80,7 +87,9 @@ app.get('/', async (req, res) => {
 app.listen(port, async () => {
   console.log("\x1b[32m%s\x1b[0m",`Server is running on port: ${port}`);
   schedule.scheduleJob('0 * * * *', async () => { 
-    await retry(10, init);
+    if (!cycling) {
+      await retry(10, init);
+    }
   });
 })
 
