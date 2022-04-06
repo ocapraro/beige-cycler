@@ -9,3 +9,6 @@ colors.db
 
 # pics
 /tmp
+
+# misc
+.DS_Store
