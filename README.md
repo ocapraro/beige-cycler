@@ -1,6 +1,7 @@
 # beige-cycler
 This cycles your discord profile picture between different shades of beige every hour.
-![beige 1](./resources/beige1.png | width=100)![beige 2](./resources/beige2.png)
+
+<img src="./resources/beige1.png" height="100" /><img src="./resources/beige2.png" height="100" />
 ## setup
 
 `git clone https://github.com/ocapraro/beige-cycler`
